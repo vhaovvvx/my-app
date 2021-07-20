@@ -1,18 +1,18 @@
-import React, { useEffect, useState } from "react";
-import TodoList from "./component/TodoList";
-import TodoForm from "./component/TodoForm";
-import "./App.css";
-import PostList from "./component/PostList";
-import Pagination from "./component/Pagination";
-import queryString from "query-string";
-import PostFiltersForm from "./component/PostFiltersForm";
-import ColorBox from "./component/ColorBox";
+import React, { useEffect, useState } from 'react';
+import TodoList from './component/TodoList';
+import TodoForm from './component/TodoForm';
+import './App.css';
+import PostList from './component/PostList';
+import Pagination from './component/Pagination';
+import queryString from 'query-string';
+import PostFiltersForm from './component/PostFiltersForm';
+import ColorBox from './component/ColorBox';
 
 function App() {
   const [todoList, setTodoList] = useState([
-    { id: 1, title: "Anhdeptrai qua" },
-    { id: 2, title: "anhdeptrai vai lin" },
-    { id: 3, title: "anhdeptrai that day" },
+    { id: 1, title: 'Anhdeptrai qua' },
+    { id: 2, title: 'anhdeptrai vai lin' },
+    { id: 3, title: 'anhdeptrai that day' },
   ]);
 
   const [postList, setPostList] = useState([]);
@@ -38,14 +38,14 @@ function App() {
         setPostList(data);
         setPagination(pagination);
       } catch (error) {
-        console.log("failed to fetch post list: ", error);
+        console.log('failed to fetch post list: ', error);
       }
     }
     fetchPostList();
   }, [filters]);
 
   function handlePageChange(newPage) {
-    console.log("new page:", newPage);
+    console.log('new page:', newPage);
     setFilter({
       ...filters,
       _page: newPage,
@@ -60,6 +60,7 @@ function App() {
     setTodoList(newTodoList);
   }
   function handleTodoFormSubmit(formValues) {
+    console.log(formValues);
     const newTodo = {
       id: todoList.length + 1,
       ...formValues,
@@ -69,22 +70,29 @@ function App() {
     setTodoList(newTodoList);
   }
   function handleFilterChange(newFilters) {
-    console.log("new filters: ", newFilters);
+    console.log('new filters: ', newFilters);
+    setFilter({
+      ...filters,
+      _page: 1,
+      title_like: newFilters.searchTerm,
+    });
   }
 
   return (
     <>
       <h1>React Hook - Todolist - PostList</h1>
       <ColorBox></ColorBox>
+      <PostFiltersForm onSubmit={handleFilterChange}></PostFiltersForm>
+
       <PostList posts={postList}></PostList>
-      <TodoList todos={todoList} onTodoClick={handleTodoClick}></TodoList>
+      <TodoList todos={todoList} onTodoClick={handleTodoClick}>
+        1
+      </TodoList>
       <TodoForm onSubmit={handleTodoFormSubmit}></TodoForm>
       <Pagination
         pagination={pagination}
         onPageChange={handlePageChange}
       ></Pagination>
-
-      <PostFiltersForm onSubmit={handleFilterChange}></PostFiltersForm>
     </>
   );
 }

@@ -1,45 +1,41 @@
-import React, { useState,useRef } from 'react';
-import PropTypes from 'prop-types';
+import React, { useState, useRef } from "react";
+import PropTypes from "prop-types";
 
 PostFiltersForm.propTypes = {
-    onSubmit:PropTypes.func,
+  onSubmit: PropTypes.func,
 };
 
 PostFiltersForm.defaultProps = {
-    onSubmit:null,
+  onSubmit: null,
 };
 
-
 function PostFiltersForm(props) {
-    const {onSubmit} = props;
-    const [searchTerm, setSearchTerm] = useState("");
-    const typingTimeoutRef = useRef(null);
+  const { onSubmit } = props;
+  const [searchTerm, setSearchTerm] = useState("");
+  const typingTimeoutRef = useRef(null);
 
-    function handleSearchTermChange(e){
-        const value = e.target.value
+  function handleSearchTermChange(e) {
+    const value = e.target.value;
 
-        setSearchTerm(value);
+    setSearchTerm(value);
 
-        if(!onSubmit) return;
-        //set -- 100 - clear , set -- 300 => submit
-        if(typingTimeoutRef.current){
-            clearTimeout(typingTimeoutRef.current);
-        }
-        typingTimeoutRef.current = setTimeout(() => {
-            const formValues = {
-                searchTerm:value,
-            };
-            onSubmit(formValues);
-        }, 300);
+    if (!onSubmit) return;
+    //set -- 100 - clear , set -- 300 => submit
+    if (typingTimeoutRef.current) {
+      clearTimeout(typingTimeoutRef.current);
     }
-    return (
-        <form>
-            <input type="text" 
-            value={searchTerm}
-            onChange={handleSearchTermChange}
-            />
-        </form>
-    );
+    typingTimeoutRef.current = setTimeout(() => {
+      const formValues = {
+        searchTerm: value,
+      };
+      onSubmit(formValues);
+    }, 300);
+  }
+  return (
+    <form>
+      <input type="text" value={searchTerm} onChange={handleSearchTermChange} />
+    </form>
+  );
 }
 
 export default PostFiltersForm;
